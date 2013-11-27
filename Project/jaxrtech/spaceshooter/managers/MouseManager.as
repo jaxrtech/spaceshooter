@@ -1,9 +1,10 @@
-package jaxrtech.spaceshooter.helpers
+package jaxrtech.spaceshooter.managers
 {
 	import flash.events.*;
 	import flash.utils.*;
 	
 	import jaxrtech.spaceshooter.base.BaseSprite;
+	import jaxrtech.spaceshooter.handlers.IMouseHandler;
 	
 	public class MouseManager extends BaseSprite
 	{

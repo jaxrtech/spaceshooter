@@ -17,7 +17,7 @@
 			super();
 		}
 		
-		protected override function update(e:Event):void
+		public override function update(e:Event):void
 		{
 			var angle:Number = ((this.rotation - 90) * Math.PI / 180);
 			x = x + movementSpeed * Math.cos(angle);

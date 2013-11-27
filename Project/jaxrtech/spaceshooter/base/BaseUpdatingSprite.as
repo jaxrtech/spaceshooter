@@ -1,9 +1,9 @@
 package jaxrtech.spaceshooter.base
 {
-	import flash.utils.*;
 	import flash.events.*;
+	import flash.utils.*;
 	
-	public class BaseUpdatingSprite extends BaseSprite
+	public class BaseUpdatingSprite extends BaseSprite implements IBaseUpdatingSprite
 	{
 		public function BaseUpdatingSprite()
 		{
@@ -15,11 +15,13 @@ package jaxrtech.spaceshooter.base
 		
 		public override function enable():void
 		{
+			super.enable();
 			this.stage.addEventListener(Event.ENTER_FRAME, update);
 		}
 		
 		public override function disable():void
 		{
+			super.disable();
 			this.stage.removeEventListener(Event.ENTER_FRAME, update);
 		}
 		
@@ -27,6 +29,6 @@ package jaxrtech.spaceshooter.base
 		 * [Virtual method]
 		 * Called each time a new frame is about to be drawn
 		 */
-		protected function update(e:Event):void { }
+		public function update(e:Event):void { }
 	}
 }

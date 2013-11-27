@@ -2,101 +2,136 @@ package jaxrtech.spaceshooter
 {
 	import fl.text.TLFTextField;
 	
+	import flash.display.DisplayObject;
 	import flash.display.MovieClip;
-	import flash.display.Sprite;
+	import flash.display.SimpleButton;
+	import flash.errors.IllegalOperationError;
 	import flash.events.*;
 	import flash.system.Capabilities;
-	import flash.text.TextFormat;
-	import flash.text.TextFormatAlign;
-	import flash.utils.Timer;
-	
-	import flashx.textLayout.events.TextLayoutEvent;
-	import flashx.textLayout.formats.TextLayoutFormat;
+	import flash.utils.*;
 	
 	import jaxrtech.spaceshooter.base.BaseSprite;
 	import jaxrtech.spaceshooter.base.BaseUpdatingSprite;
-	import jaxrtech.spaceshooter.sprites.Bullet;
-	import jaxrtech.spaceshooter.sprites.HealthBar;
+	import jaxrtech.spaceshooter.base.IBaseSprite;
+	import jaxrtech.spaceshooter.handlers.IHealthHandler;
+	import jaxrtech.spaceshooter.handlers.ISpawnHandler;
+	import jaxrtech.spaceshooter.managers.HealthManager;
+	import jaxrtech.spaceshooter.managers.HealthState;
+	import jaxrtech.spaceshooter.managers.MouseFollower;
+	import jaxrtech.spaceshooter.managers.SpawnManager;
+	import jaxrtech.spaceshooter.sprites.IEnemy;
 	import jaxrtech.spaceshooter.sprites.PlayerShip;
 	import jaxrtech.spaceshooter.sprites.RedEnemy;
 	import jaxrtech.spaceshooter.util.DebugUtil;
 	import jaxrtech.spaceshooter.util.Util;
 	
-	public class Game extends BaseUpdatingSprite
+	public class Game extends BaseUpdatingSprite implements IHealthHandler, ISpawnHandler
 	{
-		public const ENEMY_SPAWN_DELAY_MS:int = 1000;
-		
-		private var enemySpawnTimer:Timer = new Timer(ENEMY_SPAWN_DELAY_MS);
-		
-		public static var bullets:Array = new Array();
-		public static var enemies:Array = new Array();
-		public static var playerShip:PlayerShip = new PlayerShip();
-		
-		private var scoreText:TLFTextField;
-		private var healthBar:HealthBar;
-		
-		private var _score:int = 0;
+		public static var INSTANCE:Game;
 		
 		public function Game()
 		{
 			super();
 		}
 		
+		public var healthManager:HealthManager;
+		public var spawnManager:SpawnManager;
+		
+		public var bullets:Array = new Array();
+		public var enemies:Array = new Array();
+		public var playerShip:PlayerShip = new PlayerShip();
+		
+		public var scoreText:TLFTextField;
+		public var healthBar:MovieClip;
+		public var healthText:TLFTextField;
+		
+		public var overlay:MovieClip;
+		public var gameOver:TLFTextField;
+		public var replayButton:SimpleButton;
+		
+		private var _score:int = 0;
+		
+		public override function init():void
+		{
+			super.init();
+			
+			scoreText = stage.getChildByName("scoreText") as TLFTextField;
+			healthBar = stage.getChildByName("healthBar") as MovieClip;
+			healthText = stage.getChildByName("healthText") as TLFTextField;
+			
+			overlay = stage.getChildByName("overlay") as MovieClip;
+			overlay.visible = false;
+			gameOver = stage.getChildByName("gameOver") as TLFTextField;
+			gameOver.visible = false;		
+			replayButton = stage.getChildByName("replayButton") as SimpleButton;
+			replayButton.visible = false;
+			
+			healthManager = new HealthManager(this as IHealthHandler);
+			spawnManager = new SpawnManager(this as ISpawnHandler);
+			stage.addChild(healthManager);
+			stage.addChild(spawnManager);
+			
+			stage.addChild(playerShip);
+		}
+		
 		public override function enable():void
 		{
 			super.enable();
+			
+			configurePlayerShip();
+			spawnManager.enable();
+			spawnManager.start();
+			healthManager.enable();
 			
 			if (Capabilities.isDebugger)
 			{
 				DebugUtil.traceStageChildren(stage);
 			}
-			
-			healthBar = stage.getChildByName("healthBar") as HealthBar;
-			scoreText = stage.getChildByName("scoreText") as TLFTextField;
-			
-			addPlayerShip();
-			addAndStartSpawnTick();
 		}
 		
-		private function addPlayerShip():void
+		private function configurePlayerShip():void
 		{
-			playerShip.x = this.stage.stageWidth / 2;
-			playerShip.y = this.stage.stageHeight / 2;
-			this.stage.addChild(playerShip);
-		}
-		
-		private function addAndStartSpawnTick():void
-		{
-			enemySpawnTimer.addEventListener(TimerEvent.TIMER, onSpawnTick);
-			enemySpawnTimer.start();
+			playerShip.x = stage.stageWidth / 2;
+			playerShip.y = stage.stageHeight / 2;
+			playerShip.rotation = 0;
+			playerShip.health = HealthManager.MAXIMUM_HEALTH;
+			playerShip.enable();
 		}
 		
 		public override function disable():void
 		{
 			super.disable();
 			
-			removeAllStageChildren();
-		}
-		
-		private function removeAllStageChildren():void
-		{
-			while (stage.numChildren > 0)
+			playerShip.disable();
+			healthManager.disable();
+			spawnManager.disable();
+			
+			Util.applyToArray(enemies, function(enemy:IBaseSprite):void 
 			{
-				stage.removeChildAt(0);
-			}
+				enemy.disable();
+			});
+			Util.applyToArray(bullets, function(bullet:IBaseSprite):void
+			{
+				bullet.disable();
+			});
 		}
 		
-		protected override function update(e:Event):void
+		public override function update(e:Event):void
 		{
 			removeOffStageBullets();
 			
 			checkEnemyCollisions()
 			checkBulletCollisions();
+			
+			if (healthManager.healthState == HealthState.DEAD)
+			{
+				switchToGameOverMode();
+			}
 		}
 		
 		private function removeOffStageBullets():void
 		{
-			for each (var bullet in bullets)
+			for each (var bullet:DisplayObject in bullets)
 			{
 				if (bullet.x < (0 - bullet.width * 2) && bullet.y < (0 - bullet.height * 2))
 				{
@@ -109,14 +144,14 @@ package jaxrtech.spaceshooter
 		
 		private function checkEnemyCollisions():void
 		{
-			for each (var enemy in enemies)
+			for each (var enemy:IEnemy in enemies)
 			{
-				if (enemy.hitTestObject(playerShip))
+				if ((enemy as DisplayObject).hitTestObject(playerShip))
 				{
+					playerShip.health -= enemy.damage;
+					
 					enemy.destroy();
-					Util.removeFromStageAndArray(stage, enemies, enemy);
-					playerShip.health -= 10;
-					healthBar.health = playerShip.health;
+					Util.removeFromArrayAndStage(stage, enemies, enemy as IBaseSprite);
 				}
 			}
 		}
@@ -125,19 +160,24 @@ package jaxrtech.spaceshooter
 		{
 			for each (var bullet in bullets)
 			{
-				for each (var enemy in enemies)
+				for each (var enemy:IEnemy in enemies)
 				{
 					if (bullet.hitTestObject(enemy))
 					{
-						enemy.destroy();
-						Util.removeFromStageAndArray(stage, enemies, enemy);
-						score += 10;
+						enemy.health -= bullet.damage;
+						
+						if (enemy.health <= 0)
+						{
+							enemy.destroy();
+							Util.removeFromArrayAndStage(stage, enemies, enemy as IBaseSprite);
+							score += enemy.pointValue;
+						}
 					}
 				}
 			}
 		}
 		
-		private function onSpawnTick(e:Event):void
+		public function onSpawnTick(e:Event):void
 		{
 			createNewEnemy();
 		}
@@ -151,6 +191,35 @@ package jaxrtech.spaceshooter
 			stage.addChild(enemy);
 		}
 		
+		public function onDeath():void
+		{
+			trace("onDeath() called");
+			healthManager.healthState = HealthState.DEAD;
+		}
+		
+		private function switchToGameOverMode():void
+		{
+			this.disable();
+			
+			overlay.visible = true;
+			gameOver.visible = true;
+			replayButton.visible = true;
+			replayButton.addEventListener(MouseEvent.CLICK, onReplay);
+		}
+		
+		private function onReplay(e:MouseEvent):void
+		{
+			replayButton.removeEventListener(MouseEvent.CLICK, onReplay);
+			overlay.visible = false;
+			gameOver.visible = false;
+			replayButton.visible = false;
+			
+			Util.removeAllFromArrayAndStage(stage, bullets);
+			Util.removeAllFromArrayAndStage(stage, enemies);
+			
+			this.enable();
+		}
+		
 		private function set score(s:int):void
 		{
 			_score = s;
@@ -161,18 +230,5 @@ package jaxrtech.spaceshooter
 		{
 			return _score;
 		}
-		
-		/*
-		function handleBulletRingBuffer():void
-		{
-			// Check that we did not go over the limit adding another one
-			if (bullets.length > MAX_BULLETS_LIMIT)
-			{
-				var bullet = bullets[0];
-				bullets.splice(0, 1);
-				stage.removeChild(bullet);
-			}	
-		}
-		*/
 	}
 }

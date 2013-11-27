@@ -1,4 +1,4 @@
-package jaxrtech.spaceshooter.helpers
+package jaxrtech.spaceshooter.handlers
 {
 	import flash.events.MouseEvent;
 	import flash.events.Event;

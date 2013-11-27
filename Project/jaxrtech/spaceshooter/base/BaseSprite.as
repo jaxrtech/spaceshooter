@@ -1,10 +1,14 @@
 package jaxrtech.spaceshooter.base
 {
+	import avmplus.getQualifiedClassName;
+	
 	import flash.display.Sprite;
+	import flash.errors.IllegalOperationError;
 	import flash.events.*;
+	import flash.system.Capabilities;
 	import flash.utils.*;
 	
-	public class BaseSprite extends Sprite
+	public class BaseSprite extends Sprite implements IBaseSprite
 	{
 		/**
 		 * [Abstract Class]
@@ -17,7 +21,7 @@ package jaxrtech.spaceshooter.base
 			super();
 			
 			if (Class(getDefinitionByName(getQualifiedClassName(this))) == BaseSprite)
-				throw new Error("BaseSprite must not be directly instantiated");
+				throw new IllegalOperationError("BaseSprite must not be directly instantiated");
 			
 			this.addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 		}
@@ -31,6 +35,7 @@ package jaxrtech.spaceshooter.base
 		{
 			//trace(getQualifiedClassName(this) + " added to stage");
 			this.removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
+			this.init();
 			this.enable();
 			this.addEventListener(Event.REMOVED, onRemove);
 		}
@@ -53,6 +58,11 @@ package jaxrtech.spaceshooter.base
 		 */
 		public function destroy():void
 		{
+			if (Capabilities.isDebugger)
+			{
+				trace(getQualifiedClassName(this) + " was destroyed.");
+			}
+			
 			this.disable();
 			this.removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 			this.removeEventListener(Event.REMOVED, onRemove);
@@ -60,17 +70,48 @@ package jaxrtech.spaceshooter.base
 		
 		/**
 		 * [Virtual method]
-		 * Used to add custom event listeners and other components at the point that the sprite is 
-		 * added to the stage
+		 * Used to initilize add children to the stage and initially configure any objects or 
+		 * states.
+		 * <br/>
+		 * Note: This is called only when the object had been added or readded to the stage.
 		 */
-		public function enable():void { }
+		public function init():void
+		{
+			if (Capabilities.isDebugger)
+			{
+				trace(getQualifiedClassName(this) + " was initialized.");
+			}
+		}
 		
 		/**
 		 * [Virtual method]
-		 * Used to remove custom event listeers and other componets at the point that the sprite is
-		 * removed as a child
+		 * Used to enable custom event listeners to fire and other components at the point that the 
+		 * sprite is added to the stage. 
+		 * <br/>
+		 * Note: This method is also called when the object resumes from a disble() call.
 		 */
-		public function disable():void { }
+		public function enable():void 
+		{
+			if (Capabilities.isDebugger)
+			{
+				trace(getQualifiedClassName(this) + " was enabled.");
+			}
+		}
+		
+		/**
+		 * [Virtual method]
+		 * Used to disble custom event listeners from firing and other components. Note that this
+		 * method can be envoked at any time.
+		 * <br/>
+		 * Note: An enable() call can be envoked after this method.
+		 */
+		public function disable():void
+		{
+			if (Capabilities.isDebugger)
+			{
+				trace(getQualifiedClassName(this) + " was disabled.");
+			}
+		}
 		
 	}
 }

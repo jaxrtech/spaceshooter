@@ -1,8 +1,9 @@
 package jaxrtech.spaceshooter.sprites
 {
-	public interface IProjectile
+	import jaxrtech.spaceshooter.base.IBaseSprite;
+
+	public interface IProjectile extends IBaseSprite, IWeapon
 	{
-		function get damage():int;
 		function get movementSpeed():Number;
 	}
 }

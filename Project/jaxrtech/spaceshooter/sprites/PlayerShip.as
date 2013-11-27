@@ -7,21 +7,22 @@ package jaxrtech.spaceshooter.sprites
 	
 	import jaxrtech.spaceshooter.Game;
 	import jaxrtech.spaceshooter.base.BaseUpdatingSprite;
-	import jaxrtech.spaceshooter.helpers.IMouseHandler;
-	import jaxrtech.spaceshooter.helpers.KeyboardManager;
-	import jaxrtech.spaceshooter.helpers.MouseFollower;
-	import jaxrtech.spaceshooter.helpers.MouseManager;
+	import jaxrtech.spaceshooter.handlers.IMouseHandler;
+	import jaxrtech.spaceshooter.managers.KeyboardManager;
+	import jaxrtech.spaceshooter.managers.MouseFollower;
+	import jaxrtech.spaceshooter.managers.MouseManager;
 	
 	public class PlayerShip extends BaseUpdatingSprite implements IMouseHandler, IKillable
 	{
-		private const SPEED:int = 5;
-		private const SHOOT_WAIT_MS:int = 100;
+		private static const SPEED:int = 5;
+		private static const SHOOT_WAIT_MS:int = 100;
 		
-		private var keys:Array = [Keyboard.UP,
-								  Keyboard.DOWN,
-								  Keyboard.LEFT,
-								  Keyboard.RIGHT,
-								  Keyboard.SPACE]
+		private static const UP_KEY:uint = Keyboard.W;
+		private static const DOWN_KEY:uint = Keyboard.D;
+		private static const LEFT_KEY:uint = Keyboard.A;
+		private static const RIGHT_KEY:uint = Keyboard.D;
+		
+		private var keys:Array = [UP_KEY, DOWN_KEY, LEFT_KEY, RIGHT_KEY]
 		private var keyboardManager:KeyboardManager = new KeyboardManager(keys);
 		
 		private var shipMouseFollower:MouseFollower = new MouseFollower(this as Sprite);
@@ -36,42 +37,64 @@ package jaxrtech.spaceshooter.sprites
 			super();
 		}
 		
+		public override function init():void
+		{
+			super.init();
+			
+			stage.addChild(keyboardManager);
+			stage.addChild(shipMouseFollower);
+			stage.addChild(mouseHandler);
+		}
+		
 		public override function enable():void
 		{
 			super.enable();
-			this.stage.addChild(keyboardManager);
-			this.stage.addChild(shipMouseFollower);
-			this.stage.addChild(mouseHandler);
+			
+			keyboardManager.enable();
+			shipMouseFollower.enable();
+			mouseHandler.enable();
+			shootTimer.start();
 		}
 		
 		public override function disable():void
 		{
 			super.disable();
-			this.stage.removeChild(keyboardManager);
-			this.stage.removeChild(shipMouseFollower);
-			this.stage.removeChild(mouseHandler);
+			
+			shootTimer.stop();
+			keyboardManager.disable();
+			shipMouseFollower.disable();
+			mouseHandler.disable();
 		}
 		
-		protected override function update(e:Event):void
+		public override function destroy():void
+		{
+			super.destroy();
+			
+			stage.removeChild(keyboardManager);
+			stage.removeChild(shipMouseFollower);
+			stage.removeChild(mouseHandler);
+		}
+		
+		public override function update(e:Event):void
 		{
 			handlePositionKeypresses();
 		}
 		
 		private function handlePositionKeypresses():void
 		{
-			if (keyboardManager.isKeyDown(Keyboard.UP))
+			if (keyboardManager.isKeyDown(UP_KEY))
 			{
 				this.y -= SPEED;
 			}
-			if (keyboardManager.isKeyDown(Keyboard.DOWN))
+			if (keyboardManager.isKeyDown(DOWN_KEY))
 			{
 				this.y += SPEED;
 			}
-			if (keyboardManager.isKeyDown(Keyboard.LEFT))
+			if (keyboardManager.isKeyDown(LEFT_KEY))
 			{
 				this.x -= SPEED; 
 			}
-			if (keyboardManager.isKeyDown(Keyboard.RIGHT))
+			if (keyboardManager.isKeyDown(RIGHT_KEY))
 			{
 				this.x += SPEED;
 			}
@@ -99,7 +122,7 @@ package jaxrtech.spaceshooter.sprites
 			bullet.rotation = this.shipMouseFollower.generatedRotation;
 			
 			stage.addChildAt(bullet, 0);
-			Game.bullets.push(bullet);
+			Game.INSTANCE.bullets.push(bullet);
 		}
 		
 		public function get health():int
@@ -110,6 +133,8 @@ package jaxrtech.spaceshooter.sprites
 		public function set health(h:int):void
 		{
 			_health = h;
+			
+			Game.INSTANCE.healthManager.health = _health;
 		}
 	}
 }

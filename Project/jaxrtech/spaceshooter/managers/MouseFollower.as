@@ -11,7 +11,6 @@ package jaxrtech.spaceshooter.managers
 	
 	public class MouseFollower extends BaseUpdatingSprite
 	{
-		
 		private var _generatedRotation:int;
 		private var object:Sprite;
 		
@@ -19,16 +18,6 @@ package jaxrtech.spaceshooter.managers
 		{
 			super();
 			this.object = object;
-		}
-		
-		public override function enable():void
-		{
-			super.enable();
-		}
-		
-		public override function disable():void
-		{
-			super.disable();
 		}
 		
 		public override function update(e:Event):void

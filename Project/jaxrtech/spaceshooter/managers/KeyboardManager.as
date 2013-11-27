@@ -1,4 +1,4 @@
-﻿package jaxrtech.spaceshooter.helpers
+﻿package jaxrtech.spaceshooter.managers
 {
 	import flash.display.Sprite;
 	import flash.events.*;
@@ -32,14 +32,18 @@
 		
 		public override function enable():void
 		{
-			this.stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyPressDown);
-			this.stage.addEventListener(KeyboardEvent.KEY_UP, onKeyPressUp);
+			super.enable();
+			
+			stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyPressDown);
+			stage.addEventListener(KeyboardEvent.KEY_UP, onKeyPressUp);
 		}
 		
 		public override function disable():void
 		{
-			this.stage.removeEventListener(KeyboardEvent.KEY_DOWN, onKeyPressDown);
-			this.stage.removeEventListener(KeyboardEvent.KEY_UP, onKeyPressUp);
+			super.disable();
+			
+			stage.removeEventListener(KeyboardEvent.KEY_DOWN, onKeyPressDown);
+			stage.removeEventListener(KeyboardEvent.KEY_UP, onKeyPressUp);
 		}
 		
 		public function isKeyDown(key:uint):Boolean
