@@ -1,6 +1,5 @@
 ﻿package jaxrtech.spaceshooter.managers
 {
-	import flash.display.Sprite;
 	import flash.events.*;
 	import flash.system.Capabilities;
 	import flash.utils.Dictionary;

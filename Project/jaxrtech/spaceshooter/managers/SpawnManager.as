@@ -3,9 +3,7 @@ package jaxrtech.spaceshooter.managers
 	import flash.events.*;
 	import flash.utils.Timer;
 	
-	import jaxrtech.spaceshooter.Game;
 	import jaxrtech.spaceshooter.base.BaseSprite;
-	import jaxrtech.spaceshooter.sprites.RedEnemy;
 	import jaxrtech.spaceshooter.handlers.ISpawnHandler;
 
 	public class SpawnManager extends BaseSprite

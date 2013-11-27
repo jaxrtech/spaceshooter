@@ -1,6 +1,5 @@
 package jaxrtech.spaceshooter.util
 {
-	import flash.display.Sprite;
 	import flash.display.Stage;
 	
 	public class DebugUtil
