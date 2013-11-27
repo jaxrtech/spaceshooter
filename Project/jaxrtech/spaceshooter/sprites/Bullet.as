@@ -3,6 +3,7 @@
 	import flash.events.*;
 	
 	import jaxrtech.spaceshooter.base.BaseUpdatingSprite;
+	import jaxrtech.spaceshooter.traits.IProjectile;
 	
 	public class Bullet extends BaseUpdatingSprite implements IProjectile
 	{

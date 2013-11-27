@@ -5,23 +5,20 @@ package jaxrtech.spaceshooter
 	import flash.display.DisplayObject;
 	import flash.display.MovieClip;
 	import flash.display.SimpleButton;
-	import flash.errors.IllegalOperationError;
 	import flash.events.*;
 	import flash.system.Capabilities;
 	import flash.utils.*;
 	
-	import jaxrtech.spaceshooter.base.BaseSprite;
 	import jaxrtech.spaceshooter.base.BaseUpdatingSprite;
 	import jaxrtech.spaceshooter.base.IBaseSprite;
 	import jaxrtech.spaceshooter.handlers.IHealthHandler;
 	import jaxrtech.spaceshooter.handlers.ISpawnHandler;
 	import jaxrtech.spaceshooter.managers.HealthManager;
 	import jaxrtech.spaceshooter.managers.HealthState;
-	import jaxrtech.spaceshooter.managers.MouseFollower;
 	import jaxrtech.spaceshooter.managers.SpawnManager;
-	import jaxrtech.spaceshooter.sprites.IEnemy;
 	import jaxrtech.spaceshooter.sprites.PlayerShip;
 	import jaxrtech.spaceshooter.sprites.RedEnemy;
+	import jaxrtech.spaceshooter.traits.IEnemy;
 	import jaxrtech.spaceshooter.util.DebugUtil;
 	import jaxrtech.spaceshooter.util.Util;
 	

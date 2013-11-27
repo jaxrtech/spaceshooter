@@ -1,4 +1,4 @@
-package jaxrtech.spaceshooter.sprites
+package jaxrtech.spaceshooter.traits
 {
 	import jaxrtech.spaceshooter.base.IBaseSprite;
 	

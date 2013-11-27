@@ -11,6 +11,7 @@ package jaxrtech.spaceshooter.sprites
 	import jaxrtech.spaceshooter.managers.KeyboardManager;
 	import jaxrtech.spaceshooter.managers.MouseFollower;
 	import jaxrtech.spaceshooter.managers.MouseManager;
+	import jaxrtech.spaceshooter.traits.IKillable;
 	
 	public class PlayerShip extends BaseUpdatingSprite implements IMouseHandler, IKillable
 	{

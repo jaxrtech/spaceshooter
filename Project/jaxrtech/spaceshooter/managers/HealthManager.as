@@ -1,10 +1,6 @@
 package jaxrtech.spaceshooter.managers
 {
-	import fl.text.TLFTextField;
-	
-	import flash.display.MovieClip;
 	import flash.system.Capabilities;
-	import flash.text.TextField;
 	
 	import jaxrtech.spaceshooter.Game;
 	import jaxrtech.spaceshooter.base.BaseSprite;

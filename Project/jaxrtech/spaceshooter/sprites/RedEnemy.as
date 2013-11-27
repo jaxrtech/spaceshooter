@@ -5,6 +5,7 @@ package jaxrtech.spaceshooter.sprites
 	import jaxrtech.spaceshooter.Game;
 	import jaxrtech.spaceshooter.base.BaseUpdatingSprite;
 	import jaxrtech.spaceshooter.util.Targetting;
+	import jaxrtech.spaceshooter.traits.IEnemy;
 	
 	public class RedEnemy extends BaseUpdatingSprite implements IEnemy
 	{
