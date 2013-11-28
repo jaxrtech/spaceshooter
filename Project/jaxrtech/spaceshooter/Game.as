@@ -27,8 +27,6 @@ package jaxrtech.spaceshooter
 	
 	public class Game extends BaseUpdatingSprite
 	{
-		public static var INSTANCE:Game;
-		
 		public function Game()
 		{
 			super();
@@ -45,7 +43,7 @@ package jaxrtech.spaceshooter
 		
 		public var bullets:Array = new Array();
 		public var enemies:Array = new Array();
-		public var playerShip:PlayerShip = new PlayerShip();
+		public var playerShip:PlayerShip = new PlayerShip(this as Game);
 		
 		public var scoreText:TLFTextField;
 		public var healthBar:MovieClip;

@@ -15,6 +15,8 @@ package jaxrtech.spaceshooter.sprites
 	
 	public class PlayerShip extends BaseUpdatingSprite implements IMouseHandler, IKillable
 	{
+		private var game:Game;
+		
 		private static const SPEED:int = 5;
 		private static const SHOOT_WAIT_MS:int = 50;
 		
@@ -33,9 +35,10 @@ package jaxrtech.spaceshooter.sprites
 		
 		private var _health:int = 100;
 			
-		public function PlayerShip()
+		public function PlayerShip(game:Game)
 		{
 			super();
+			this.game = game;
 		}
 		
 		public override function init():void
@@ -123,7 +126,7 @@ package jaxrtech.spaceshooter.sprites
 			bullet.rotation = this.shipMouseFollower.generatedRotation;
 			
 			stage.addChildAt(bullet, 0);
-			Game.INSTANCE.bullets.push(bullet);
+			game.bullets.push(bullet);
 		}
 		
 		public function get health():int
@@ -135,7 +138,7 @@ package jaxrtech.spaceshooter.sprites
 		{
 			_health = h;
 			
-			Game.INSTANCE.healthManager.health = _health;
+			game.healthManager.health = _health;
 		}
 	}
 }

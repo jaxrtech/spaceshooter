@@ -27,9 +27,9 @@ package jaxrtech.spaceshooter.managers
 		
 		private function checkEnemyCollisions():void
 		{
-			for each (var enemy:IEnemy in Game.INSTANCE.enemies)
+			for each (var enemy:IEnemy in handler.enemies)
 			{
-				if ((enemy as DisplayObject).hitTestObject(Game.INSTANCE.playerShip as DisplayObject))
+				if ((enemy as DisplayObject).hitTestObject(handler.player as DisplayObject))
 				{
 					handler.onEnemyPlayerCollision(this, enemy);
 				}
@@ -38,9 +38,9 @@ package jaxrtech.spaceshooter.managers
 		
 		private function checkBulletCollisions():void
 		{
-			for each (var bullet:IProjectile in Game.INSTANCE.bullets)
+			for each (var bullet:IProjectile in handler.projectiles)
 			{
-				for each (var enemy:IEnemy in Game.INSTANCE.enemies)
+				for each (var enemy:IEnemy in handler.enemies)
 				{
 					if ((bullet as DisplayObject).hitTestObject(enemy as DisplayObject))
 					{

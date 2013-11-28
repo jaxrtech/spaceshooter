@@ -20,7 +20,7 @@ package jaxrtech.spaceshooter.game
 			this.game = game;
 			this.stage = stage;
 			
-			INITIAL_BAR_WIDTH = Game.INSTANCE.healthBar.width;
+			INITIAL_BAR_WIDTH = game.healthBar.width;
 		}
 		
 		public function get minimumHealth():Number

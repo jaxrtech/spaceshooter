@@ -3,6 +3,7 @@ package jaxrtech.spaceshooter.game
 	import flash.display.Stage;
 	
 	import jaxrtech.spaceshooter.Game;
+	import jaxrtech.spaceshooter.base.IBaseSprite;
 	import jaxrtech.spaceshooter.handlers.ICollisionHandler;
 	import jaxrtech.spaceshooter.managers.CollisionManager;
 	import jaxrtech.spaceshooter.traits.IEnemy;
@@ -18,6 +19,21 @@ package jaxrtech.spaceshooter.game
 		{
 			this.game = game;
 			this.stage = stage;
+		}
+		
+		public function get player():IBaseSprite
+		{
+			return game.playerShip;
+		}
+		
+		public function get enemies():Array
+		{
+			return game.enemies;
+		}
+		
+		public function get projectiles():Array
+		{
+			return game.bullets;
 		}
 		
 		public function onEnemyPlayerCollision(sender:CollisionManager, enemy:IEnemy):void

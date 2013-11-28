@@ -9,6 +9,8 @@ package jaxrtech.spaceshooter.sprites
 	
 	public class RedEnemy extends BaseUpdatingSprite implements IEnemy
 	{
+		private var game:Game;
+		
 		private static const SPEED:int = 3;
 		private static const INITAL_HEALTH:int = 10;
 		private static const DAMAGE:int = 10;
@@ -18,9 +20,10 @@ package jaxrtech.spaceshooter.sprites
 		
 		private var _health = INITAL_HEALTH;
 		
-		public function RedEnemy()
+		public function RedEnemy(game:Game)
 		{
 			super();
+			this.game = game;
 		}
 		
 		public override function update(e:Event):void
@@ -28,7 +31,7 @@ package jaxrtech.spaceshooter.sprites
 			// Rotation animation
 			rotation += ROTATION_SPEED;
 			
-			Targetting.moveObjectTowardTargetAtDelta(this, Game.INSTANCE.playerShip, SPEED);
+			Targetting.moveObjectTowardTargetAtDelta(this, game.playerShip, SPEED);
 		}
 		
 		public function get health():int

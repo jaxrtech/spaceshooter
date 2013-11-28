@@ -32,7 +32,7 @@ package jaxrtech.spaceshooter.game
 		
 		private function createNewEnemy():void
 		{
-			var enemy:RedEnemy = new RedEnemy();
+			var enemy:RedEnemy = new RedEnemy(game);
 			enemy.x = Math.random() * stage.stageWidth;
 			enemy.y = Math.random() * stage.stageHeight;
 			game.enemies.push(enemy); 
