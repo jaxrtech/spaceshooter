@@ -11,28 +11,37 @@ package jaxrtech.spaceshooter
 	
 	import jaxrtech.spaceshooter.base.BaseUpdatingSprite;
 	import jaxrtech.spaceshooter.base.IBaseSprite;
+	import jaxrtech.spaceshooter.game.CollisionHandlerImpl;
+	import jaxrtech.spaceshooter.game.HealthHandlerImpl;
+	import jaxrtech.spaceshooter.game.SpawnHandlerImpl;
+	import jaxrtech.spaceshooter.handlers.ICollisionHandler;
 	import jaxrtech.spaceshooter.handlers.IHealthHandler;
 	import jaxrtech.spaceshooter.handlers.ISpawnHandler;
+	import jaxrtech.spaceshooter.managers.CollisionManager;
 	import jaxrtech.spaceshooter.managers.HealthManager;
 	import jaxrtech.spaceshooter.managers.HealthState;
 	import jaxrtech.spaceshooter.managers.SpawnManager;
 	import jaxrtech.spaceshooter.sprites.PlayerShip;
-	import jaxrtech.spaceshooter.sprites.RedEnemy;
-	import jaxrtech.spaceshooter.traits.IEnemy;
 	import jaxrtech.spaceshooter.util.DebugUtil;
 	import jaxrtech.spaceshooter.util.Util;
 	
-	public class Game extends BaseUpdatingSprite implements IHealthHandler, ISpawnHandler
+	public class Game extends BaseUpdatingSprite
 	{
 		public static var INSTANCE:Game;
 		
 		public function Game()
 		{
 			super();
+			// Note: This should only be called once from stage to create the game stage
 		}
 		
 		public var healthManager:HealthManager;
 		public var spawnManager:SpawnManager;
+		public var collisionManager:CollisionManager;
+		
+		public var healthHandler:IHealthHandler;
+		public var spawnHandler:ISpawnHandler;
+		public var collisionHandler:ICollisionHandler;
 		
 		public var bullets:Array = new Array();
 		public var enemies:Array = new Array();
@@ -63,10 +72,17 @@ package jaxrtech.spaceshooter
 			replayButton = stage.getChildByName("replayButton") as SimpleButton;
 			replayButton.visible = false;
 			
-			healthManager = new HealthManager(this as IHealthHandler);
-			spawnManager = new SpawnManager(this as ISpawnHandler);
+			healthHandler = new HealthHandlerImpl(this, stage)
+			healthManager = new HealthManager(healthHandler);
 			stage.addChild(healthManager);
+			
+			spawnHandler = new SpawnHandlerImpl(this, stage);
+			spawnManager = new SpawnManager(spawnHandler);
 			stage.addChild(spawnManager);
+			
+			collisionHandler = new CollisionHandlerImpl(this, stage);
+			collisionManager = new CollisionManager(collisionHandler);
+			stage.addChild(collisionManager);
 			
 			stage.addChild(playerShip);
 		}
@@ -75,24 +91,17 @@ package jaxrtech.spaceshooter
 		{
 			super.enable();
 			
-			configurePlayerShip();
+			score = 0;
 			spawnManager.enable();
 			spawnManager.start();
 			healthManager.enable();
+			collisionManager.enable();
+			configurePlayerShip();
 			
 			if (Capabilities.isDebugger)
 			{
 				DebugUtil.traceStageChildren(stage);
 			}
-		}
-		
-		private function configurePlayerShip():void
-		{
-			playerShip.x = stage.stageWidth / 2;
-			playerShip.y = stage.stageHeight / 2;
-			playerShip.rotation = 0;
-			playerShip.health = HealthManager.MAXIMUM_HEALTH;
-			playerShip.enable();
 		}
 		
 		public override function disable():void
@@ -102,6 +111,7 @@ package jaxrtech.spaceshooter
 			playerShip.disable();
 			healthManager.disable();
 			spawnManager.disable();
+			collisionManager.disable();
 			
 			Util.applyToArray(enemies, function(enemy:IBaseSprite):void 
 			{
@@ -117,13 +127,19 @@ package jaxrtech.spaceshooter
 		{
 			removeOffStageBullets();
 			
-			checkEnemyCollisions()
-			checkBulletCollisions();
-			
 			if (healthManager.healthState == HealthState.DEAD)
 			{
 				switchToGameOverMode();
 			}
+		}
+		
+		private function configurePlayerShip():void
+		{
+			playerShip.x = stage.stageWidth / 2;
+			playerShip.y = stage.stageHeight / 2;
+			playerShip.rotation = 0;
+			playerShip.health = healthHandler.maximumHealth;
+			playerShip.enable();
 		}
 		
 		private function removeOffStageBullets():void
@@ -137,61 +153,6 @@ package jaxrtech.spaceshooter
 					bullets.splice(i, 1);
 				}
 			}
-		}
-		
-		private function checkEnemyCollisions():void
-		{
-			for each (var enemy:IEnemy in enemies)
-			{
-				if ((enemy as DisplayObject).hitTestObject(playerShip))
-				{
-					playerShip.health -= enemy.damage;
-					
-					enemy.destroy();
-					Util.removeFromArrayAndStage(stage, enemies, enemy as IBaseSprite);
-				}
-			}
-		}
-		
-		private function checkBulletCollisions():void
-		{
-			for each (var bullet in bullets)
-			{
-				for each (var enemy:IEnemy in enemies)
-				{
-					if (bullet.hitTestObject(enemy))
-					{
-						enemy.health -= bullet.damage;
-						
-						if (enemy.health <= 0)
-						{
-							enemy.destroy();
-							Util.removeFromArrayAndStage(stage, enemies, enemy as IBaseSprite);
-							score += enemy.pointValue;
-						}
-					}
-				}
-			}
-		}
-		
-		public function onSpawnTick(e:Event):void
-		{
-			createNewEnemy();
-		}
-		
-		private function createNewEnemy():void
-		{
-			var enemy:RedEnemy = new RedEnemy();
-			enemy.x = Math.random() * stage.stageWidth;
-			enemy.y = Math.random() * stage.stageHeight;
-			enemies.push(enemy); 
-			stage.addChild(enemy);
-		}
-		
-		public function onDeath():void
-		{
-			trace("onDeath() called");
-			healthManager.healthState = HealthState.DEAD;
 		}
 		
 		private function switchToGameOverMode():void
@@ -217,13 +178,13 @@ package jaxrtech.spaceshooter
 			this.enable();
 		}
 		
-		private function set score(s:int):void
+		public function set score(s:int):void
 		{
 			_score = s;
 			scoreText.text = _score.toString();
 		}
 		
-		private function get score():int
+		public function get score():int
 		{
 			return _score;
 		}

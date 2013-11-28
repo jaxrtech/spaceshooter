@@ -1,7 +1,5 @@
 package jaxrtech.spaceshooter.base
 {
-	import avmplus.getQualifiedClassName;
-	
 	import flash.display.Sprite;
 	import flash.errors.IllegalOperationError;
 	import flash.events.*;

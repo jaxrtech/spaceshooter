@@ -4,6 +4,7 @@ package jaxrtech.spaceshooter.handlers
 
 	public interface ISpawnHandler
 	{
+		function get delay():int;
 		function onSpawnTick(e:Event):void;
 	}
 }

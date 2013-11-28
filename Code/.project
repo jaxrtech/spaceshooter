@@ -19,7 +19,7 @@
 		<link>
 			<name>src-SpaceShooter</name>
 			<type>2</type>
-			<location>C:/Users/joshuabowden/Documents/Project 7 - Game/Project</location>
+			<locationURI>$%7BPARENT-1-PROJECT_LOC%7D/Project</locationURI>
 		</link>
 	</linkedResources>
 </projectDescription>

@@ -8,8 +8,7 @@ package jaxrtech.spaceshooter.managers
 
 	public class SpawnManager extends BaseSprite
 	{
-		private const DELAY_MS:int = 1000;
-		private var timer:Timer = new Timer(DELAY_MS);
+		private var timer:Timer;
 		private var handler:ISpawnHandler;
 		
 		public function SpawnManager(handler:ISpawnHandler)
@@ -17,6 +16,7 @@ package jaxrtech.spaceshooter.managers
 			super();
 			
 			this.handler = handler;
+			timer = new Timer(handler.delay);
 			timer.addEventListener(TimerEvent.TIMER, handler.onSpawnTick);
 		}
 		

@@ -16,7 +16,7 @@ package jaxrtech.spaceshooter.sprites
 	public class PlayerShip extends BaseUpdatingSprite implements IMouseHandler, IKillable
 	{
 		private static const SPEED:int = 5;
-		private static const SHOOT_WAIT_MS:int = 100;
+		private static const SHOOT_WAIT_MS:int = 50;
 		
 		private static const UP_KEY:uint = Keyboard.W;
 		private static const DOWN_KEY:uint = Keyboard.D;

@@ -8,7 +8,7 @@
 	public class Bullet extends BaseUpdatingSprite implements IProjectile
 	{
 		public const DEFAULT_SPEED:Number = 10;
-		public const DEFAULT_DAMAGE:int = 2;
+		public const DEFAULT_DAMAGE:int = 7;
 		
 		private var _damage:int = DEFAULT_DAMAGE;
 		private var _movementSpeed:Number = DEFAULT_SPEED;
