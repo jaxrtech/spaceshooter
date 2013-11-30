@@ -9,11 +9,12 @@ package jaxrtech.spaceshooter
 	import flash.system.Capabilities;
 	import flash.utils.*;
 	
-	import jaxrtech.spaceshooter.base.BaseUpdatingSprite;
-	import jaxrtech.spaceshooter.base.IBaseSprite;
+	import jaxrtech.spaceshooter.base.BaseUpdaingSprite;
+	import jaxrtech.spaceshooter.base.IService;
 	import jaxrtech.spaceshooter.game.CollisionHandlerImpl;
 	import jaxrtech.spaceshooter.game.HealthHandlerImpl;
-	import jaxrtech.spaceshooter.game.SpawnHandlerImpl;
+	import jaxrtech.spaceshooter.game.SpawnHandlerGameImpl;
+	import jaxrtech.spaceshooter.game.SpawnHandlerHouseImpl;
 	import jaxrtech.spaceshooter.handlers.ICollisionHandler;
 	import jaxrtech.spaceshooter.handlers.IHealthHandler;
 	import jaxrtech.spaceshooter.handlers.ISpawnHandler;
@@ -25,7 +26,7 @@ package jaxrtech.spaceshooter
 	import jaxrtech.spaceshooter.util.DebugUtil;
 	import jaxrtech.spaceshooter.util.Util;
 	
-	public class Game extends BaseUpdatingSprite
+	public class Game extends BaseUpdaingSprite
 	{
 		public function Game()
 		{
@@ -33,13 +34,14 @@ package jaxrtech.spaceshooter
 			// Note: This should only be called once from stage to create the game stage
 		}
 		
+		public var healthHandler:IHealthHandler;
 		public var healthManager:HealthManager;
-		public var spawnManager:SpawnManager;
+		
+		public var collisionHandler:ICollisionHandler;
 		public var collisionManager:CollisionManager;
 		
-		public var healthHandler:IHealthHandler;
 		public var spawnHandler:ISpawnHandler;
-		public var collisionHandler:ICollisionHandler;
+		public var spawnManager:SpawnManager;
 		
 		public var bullets:Array = new Array();
 		public var enemies:Array = new Array();
@@ -55,34 +57,40 @@ package jaxrtech.spaceshooter
 		
 		private var _score:int = 0;
 		
-		public override function init():void
+		protected override function config():void
 		{
-			super.init();
-			
 			scoreText = stage.getChildByName("scoreText") as TLFTextField;
 			healthBar = stage.getChildByName("healthBar") as MovieClip;
 			healthText = stage.getChildByName("healthText") as TLFTextField;
 			
 			overlay = stage.getChildByName("overlay") as MovieClip;
-			overlay.visible = false;
 			gameOver = stage.getChildByName("gameOver") as TLFTextField;
-			gameOver.visible = false;		
 			replayButton = stage.getChildByName("replayButton") as SimpleButton;
-			replayButton.visible = false;
 			
-			healthHandler = new HealthHandlerImpl(this, stage)
+			healthHandler = new HealthHandlerImpl(this, stage);
 			healthManager = new HealthManager(healthHandler);
-			stage.addChild(healthManager);
-			
-			spawnHandler = new SpawnHandlerImpl(this, stage);
-			spawnManager = new SpawnManager(spawnHandler);
-			stage.addChild(spawnManager);
+			addStageObject(healthManager);
 			
 			collisionHandler = new CollisionHandlerImpl(this, stage);
 			collisionManager = new CollisionManager(collisionHandler);
-			stage.addChild(collisionManager);
+			addStageObject(collisionManager);
 			
-			stage.addChild(playerShip);
+			spawnHandler = new SpawnHandlerGameImpl(this, stage);
+			spawnManager = new SpawnManager(spawnHandler);
+			addStageObject(spawnManager);
+			
+			addStageObject(playerShip);
+			addServiceArray(bullets);
+			addServiceArray(enemies);
+		}
+		
+		public override function init():void
+		{
+			super.init();
+			
+			overlay.visible = false;
+			gameOver.visible = false;		
+			replayButton.visible = false;
 		}
 		
 		public override function enable():void
@@ -90,35 +98,7 @@ package jaxrtech.spaceshooter
 			super.enable();
 			
 			score = 0;
-			spawnManager.enable();
-			spawnManager.start();
-			healthManager.enable();
-			collisionManager.enable();
 			configurePlayerShip();
-			
-			if (Capabilities.isDebugger)
-			{
-				DebugUtil.traceStageChildren(stage);
-			}
-		}
-		
-		public override function disable():void
-		{
-			super.disable();
-			
-			playerShip.disable();
-			healthManager.disable();
-			spawnManager.disable();
-			collisionManager.disable();
-			
-			Util.applyToArray(enemies, function(enemy:IBaseSprite):void 
-			{
-				enemy.disable();
-			});
-			Util.applyToArray(bullets, function(bullet:IBaseSprite):void
-			{
-				bullet.disable();
-			});
 		}
 		
 		public override function update(e:Event):void

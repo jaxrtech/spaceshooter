@@ -2,6 +2,6 @@ package jaxrtech.spaceshooter.traits
 {
 	public interface IScorable
 	{
-		function get pointValue():int;
+		function get pointValue():Number;
 	}
 }

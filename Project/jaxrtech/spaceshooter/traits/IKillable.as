@@ -2,7 +2,7 @@ package jaxrtech.spaceshooter.traits
 {
 	public interface IKillable
 	{
-		function get health():int;
-		function set health(h:int):void;
+		function get health():Number;
+		function set health(h:Number):void;
 	}
 }

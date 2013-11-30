@@ -6,18 +6,22 @@ package jaxrtech.spaceshooter.game
 	import jaxrtech.spaceshooter.Game;
 	import jaxrtech.spaceshooter.handlers.ISpawnHandler;
 	import jaxrtech.spaceshooter.sprites.RedEnemy;
+	import jaxrtech.spaceshooter.sprites.SpawnHouse;
 	
-	public class SpawnHandlerImpl implements ISpawnHandler
+	public class SpawnHandlerHouseImpl implements ISpawnHandler
 	{
 		private var game:Game;
 		private var stage:Stage;
 		
+		private var house:SpawnHouse;
+		
 		private const DELAY_MS:int = 1000;
 		
-		public function SpawnHandlerImpl(game:Game, stage:Stage)
+		public function SpawnHandlerHouseImpl(game:Game, stage:Stage, house:SpawnHouse)
 		{
 			this.game = game;
 			this.stage = stage;	
+			this.house = house;
 		}
 		
 		public function get delay():int
@@ -33,8 +37,8 @@ package jaxrtech.spaceshooter.game
 		private function createNewEnemy():void
 		{
 			var enemy:RedEnemy = new RedEnemy(game);
-			enemy.x = Math.random() * stage.stageWidth;
-			enemy.y = Math.random() * stage.stageHeight;
+			enemy.x = house.x;
+			enemy.y = house.y;
 			game.enemies.push(enemy); 
 			stage.addChild(enemy);
 		}

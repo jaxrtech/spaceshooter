@@ -2,7 +2,7 @@ package jaxrtech.spaceshooter.base
 {
 	import flash.events.Event;
 
-	public interface IBaseUpdatingSprite
+	public interface IUpdating
 	{
 		function update(e:Event):void;
 	}

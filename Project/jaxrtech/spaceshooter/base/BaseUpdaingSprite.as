@@ -3,26 +3,26 @@ package jaxrtech.spaceshooter.base
 	import flash.events.*;
 	import flash.utils.*;
 	
-	public class BaseUpdatingSprite extends BaseSprite implements IBaseUpdatingSprite
+	public class BaseUpdaingSprite extends BaseServicingSprite implements IUpdating
 	{
-		public function BaseUpdatingSprite()
+		public function BaseUpdaingSprite()
 		{
 			super();
 			
-			if (Class(getDefinitionByName(getQualifiedClassName(this))) == BaseUpdatingSprite)
+			if (Class(getDefinitionByName(getQualifiedClassName(this))) == BaseUpdaingSprite)
 				throw new Error("BaseUpdatingSprite must not be directly instantiated");
 		}
 		
 		public override function enable():void
 		{
 			super.enable();
-			this.stage.addEventListener(Event.ENTER_FRAME, update);
+			stage.addEventListener(Event.ENTER_FRAME, update);
 		}
 		
 		public override function disable():void
 		{
 			super.disable();
-			this.stage.removeEventListener(Event.ENTER_FRAME, update);
+			stage.removeEventListener(Event.ENTER_FRAME, update);
 		}
 		
 		/**

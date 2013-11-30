@@ -2,13 +2,13 @@
 {
 	import flash.events.*;
 	
-	import jaxrtech.spaceshooter.base.BaseUpdatingSprite;
+	import jaxrtech.spaceshooter.base.BaseUpdaingSprite;
 	import jaxrtech.spaceshooter.traits.IProjectile;
 	
-	public class Bullet extends BaseUpdatingSprite implements IProjectile
+	public class Bullet extends BaseUpdaingSprite implements IProjectile
 	{
 		public const DEFAULT_SPEED:Number = 10;
-		public const DEFAULT_DAMAGE:int = 7;
+		public const DEFAULT_DAMAGE:Number = 7;
 		
 		private var _damage:int = DEFAULT_DAMAGE;
 		private var _movementSpeed:Number = DEFAULT_SPEED;
@@ -35,12 +35,12 @@
 			this._movementSpeed = s;
 		}
 		
-		public function get damage():int
+		public function get damage():Number
 		{
 			return this._damage;
 		}
 		
-		public function set damage(d:int):void
+		public function set damage(d:Number):void
 		{
 			this._damage = d;
 		}

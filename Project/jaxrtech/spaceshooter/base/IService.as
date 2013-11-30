@@ -1,6 +1,6 @@
 package jaxrtech.spaceshooter.base
 {
-	public interface IBaseSprite
+	public interface IService
 	{
 		function init():void;
 		function enable():void;

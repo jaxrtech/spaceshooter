@@ -3,7 +3,8 @@ package jaxrtech.spaceshooter.game
 	import flash.display.Stage;
 	
 	import jaxrtech.spaceshooter.Game;
-	import jaxrtech.spaceshooter.base.IBaseSprite;
+	import jaxrtech.spaceshooter.base.BaseSprite;
+	import jaxrtech.spaceshooter.base.IService;
 	import jaxrtech.spaceshooter.handlers.ICollisionHandler;
 	import jaxrtech.spaceshooter.managers.CollisionManager;
 	import jaxrtech.spaceshooter.traits.IEnemy;
@@ -21,7 +22,7 @@ package jaxrtech.spaceshooter.game
 			this.stage = stage;
 		}
 		
-		public function get player():IBaseSprite
+		public function get player():IService
 		{
 			return game.playerShip;
 		}
@@ -40,18 +41,18 @@ package jaxrtech.spaceshooter.game
 		{
 			game.playerShip.health -= enemy.damage;
 			
-			Util.removeFromArrayAndStage(stage, game.enemies, enemy);
+			Util.removeFromArrayAndStage(stage, game.enemies, enemy as BaseSprite);
 		}
 		
 		public function onBulletEnemyCollision(sender:CollisionManager, bullet:IProjectile, 
 											   enemy:IEnemy):void
 		{
 			enemy.health -= bullet.damage;
-			Util.removeFromArrayAndStage(stage, game.bullets, bullet);
+			Util.removeFromArrayAndStage(stage, game.bullets, bullet as BaseSprite);
 			
 			if (enemy.health <= 0)
 			{
-				Util.removeFromArrayAndStage(stage, game.enemies, enemy);
+				Util.removeFromArrayAndStage(stage, game.enemies, enemy as BaseSprite);
 				game.score += enemy.pointValue;
 			}
 		}

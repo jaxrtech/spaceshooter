@@ -1,4 +1,4 @@
-package jaxrtech.spaceshooter.base
+﻿package jaxrtech.spaceshooter.base
 {
 	import flash.display.Sprite;
 	import flash.errors.IllegalOperationError;
@@ -6,8 +6,10 @@ package jaxrtech.spaceshooter.base
 	import flash.system.Capabilities;
 	import flash.utils.*;
 	
-	public class BaseSprite extends Sprite implements IBaseSprite
+	public class BaseSprite extends Sprite implements IService
 	{
+		private var services:Array = new Array();
+		
 		/**
 		 * [Abstract Class]
 		 * This contructor should <i>not</i> be used since this class functions as if it was 
@@ -33,8 +35,8 @@ package jaxrtech.spaceshooter.base
 		{
 			//trace(getQualifiedClassName(this) + " added to stage");
 			this.removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
-			this.init();
-			this.enable();
+			init();
+			enable();
 			this.addEventListener(Event.REMOVED, onRemove);
 		}
 

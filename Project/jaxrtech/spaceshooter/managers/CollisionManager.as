@@ -4,12 +4,12 @@ package jaxrtech.spaceshooter.managers
 	import flash.events.Event;
 	
 	import jaxrtech.spaceshooter.Game;
-	import jaxrtech.spaceshooter.base.BaseUpdatingSprite;
+	import jaxrtech.spaceshooter.base.BaseUpdaingSprite;
 	import jaxrtech.spaceshooter.handlers.ICollisionHandler;
 	import jaxrtech.spaceshooter.traits.IEnemy;
 	import jaxrtech.spaceshooter.traits.IProjectile;
 
-	public class CollisionManager extends BaseUpdatingSprite
+	public class CollisionManager extends BaseUpdaingSprite
 	{
 		private var handler:ICollisionHandler;
 		

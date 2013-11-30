@@ -6,10 +6,10 @@ package jaxrtech.spaceshooter.managers
 	import flash.events.*;
 	import flash.geom.Point;
 	
-	import jaxrtech.spaceshooter.base.BaseUpdatingSprite;
+	import jaxrtech.spaceshooter.base.BaseUpdaingSprite;
 	import jaxrtech.spaceshooter.util.Targetting;
 	
-	public class MouseFollower extends BaseUpdatingSprite
+	public class MouseFollower extends BaseUpdaingSprite
 	{
 		private var _generatedRotation:int;
 		private var object:Sprite;
