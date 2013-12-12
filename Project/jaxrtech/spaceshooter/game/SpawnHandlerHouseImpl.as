@@ -37,9 +37,9 @@ package jaxrtech.spaceshooter.game
 		private function createNewEnemy():void
 		{
 			var enemy:RedEnemy = new RedEnemy(game);
-			enemy.x = house.x;
-			enemy.y = house.y;
-			game.enemies.push(enemy); 
+			enemy.x = house.x + (house.width / 2);
+			enemy.y = house.y + (house.height / 2);
+			game.enemies.push(enemy);
 			stage.addChild(enemy);
 		}
 	}

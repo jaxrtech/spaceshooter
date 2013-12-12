@@ -12,8 +12,8 @@ package jaxrtech.spaceshooter.sprites
 	{
 		private var game:Game;
 		
-		private static const DAMAGE:Number = 0;
-		private static const INITIAL_HEALTH:Number = 100;
+		private static const DAMAGE:Number = 20;
+		private static const INITIAL_HEALTH:Number = 200;
 		private static const POINT_VALUE:Number = 100;
 		
 		private var _health:Number = INITIAL_HEALTH;

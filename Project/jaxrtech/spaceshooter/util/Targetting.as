@@ -29,8 +29,8 @@ package jaxrtech.spaceshooter.util
 															 delta:Number):void
 		{
 			var point = getPointTowardTargetAtDelta(new Point(origin.x, origin.y),
-				new Point(target.x, target.y),
-				delta);
+													new Point(target.x, target.y),
+													delta);
 			origin.x = point.x;
 			origin.y = point.y;
 		}

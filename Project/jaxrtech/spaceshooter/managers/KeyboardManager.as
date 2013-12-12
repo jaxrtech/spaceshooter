@@ -33,6 +33,8 @@
 		{
 			super.enable();
 			
+			reset();
+			
 			stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyPressDown);
 			stage.addEventListener(KeyboardEvent.KEY_UP, onKeyPressUp);
 		}
@@ -43,6 +45,16 @@
 			
 			stage.removeEventListener(KeyboardEvent.KEY_DOWN, onKeyPressDown);
 			stage.removeEventListener(KeyboardEvent.KEY_UP, onKeyPressUp);
+			
+			reset();
+		}
+		
+		private function reset():void
+		{
+			for each (var key in keyStates)
+			{
+				keyStates[key] = false;
+			}
 		}
 		
 		public function isKeyDown(key:uint):Boolean

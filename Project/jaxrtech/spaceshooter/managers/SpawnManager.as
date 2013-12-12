@@ -4,10 +4,13 @@ package jaxrtech.spaceshooter.managers
 	import flash.utils.Timer;
 	
 	import jaxrtech.spaceshooter.base.BaseSprite;
+	import jaxrtech.spaceshooter.base.BaseUpdaingSprite;
 	import jaxrtech.spaceshooter.handlers.ISpawnHandler;
 
 	public class SpawnManager extends BaseSprite
 	{
+		private var ticks:Number = 0;
+		private var lastFiringTick:Number = 0;
 		private var timer:Timer;
 		private var handler:ISpawnHandler;
 		
@@ -23,13 +26,13 @@ package jaxrtech.spaceshooter.managers
 		public override function enable():void
 		{
 			super.enable();
-			this.start();
+			start();
 		}
 		
 		public override function disable():void
 		{
 			super.disable();
-			timer.stop();
+			stop();
 		}
 		
 		public function start():void

@@ -13,7 +13,8 @@ package jaxrtech.spaceshooter.game
 		private var game:Game;
 		private var stage:Stage;
 		
-		private const DELAY_MS:int = 3000;
+		private static const DELAY_MS:int = 3000;
+		private static const SPAWN_LIMIT:int = 50;
 		
 		public function SpawnHandlerGameImpl(game:Game, stage:Stage)
 		{
@@ -33,6 +34,8 @@ package jaxrtech.spaceshooter.game
 		
 		private function createNewSpawnHouse():void
 		{
+			if (game.enemies.length > SPAWN_LIMIT) return;
+			
 			var spawnHouse:SpawnHouse = new SpawnHouse(game);
 			spawnHouse.x = Math.random() * stage.stageWidth;
 			spawnHouse.y = Math.random() * stage.stageHeight;

@@ -21,7 +21,7 @@ package jaxrtech.spaceshooter.sprites
 		private static const SHOOT_WAIT_MS:int = 50;
 		
 		private static const UP_KEY:uint = Keyboard.W;
-		private static const DOWN_KEY:uint = Keyboard.D;
+		private static const DOWN_KEY:uint = Keyboard.S;
 		private static const LEFT_KEY:uint = Keyboard.A;
 		private static const RIGHT_KEY:uint = Keyboard.D;
 		

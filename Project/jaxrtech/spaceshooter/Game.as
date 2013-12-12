@@ -22,6 +22,7 @@ package jaxrtech.spaceshooter
 	import jaxrtech.spaceshooter.managers.HealthManager;
 	import jaxrtech.spaceshooter.managers.HealthState;
 	import jaxrtech.spaceshooter.managers.SpawnManager;
+	import jaxrtech.spaceshooter.managers.StopWatch;
 	import jaxrtech.spaceshooter.sprites.PlayerShip;
 	import jaxrtech.spaceshooter.util.DebugUtil;
 	import jaxrtech.spaceshooter.util.Util;
@@ -33,6 +34,8 @@ package jaxrtech.spaceshooter
 			super();
 			// Note: This should only be called once from stage to create the game stage
 		}
+		
+		public var stopWatch:StopWatch;
 		
 		public var healthHandler:IHealthHandler;
 		public var healthManager:HealthManager;
@@ -59,6 +62,8 @@ package jaxrtech.spaceshooter
 		
 		protected override function config():void
 		{
+			stopWatch = new StopWatch();
+			
 			scoreText = stage.getChildByName("scoreText") as TLFTextField;
 			healthBar = stage.getChildByName("healthBar") as MovieClip;
 			healthText = stage.getChildByName("healthText") as TLFTextField;
@@ -99,6 +104,7 @@ package jaxrtech.spaceshooter
 			
 			score = 0;
 			configurePlayerShip();
+			stopWatch.start();
 		}
 		
 		public override function update(e:Event):void
